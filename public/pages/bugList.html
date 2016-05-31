@@ -1,0 +1,67 @@
+<div class="container">
+        <h2> Bug List </h2>
+</div>
+
+
+
+<div class="container">    
+    <div class="row" >
+        <div class="col-md-12">
+
+        <!--Putting test results in the panel-->
+        
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>Bugs Per Cycle</h4>
+                </div>
+
+                
+                <div class="panel-body">
+                        
+                        <!-- Putting Search Box -->
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <h4> Search <span class="glyphicon glyphicon-search"></span></h4>
+
+                                <input type="text" ng-model="search" class="form-control" placeholder="search">
+                            </div>
+                        </form>
+
+                        <table class="table table-responsive table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Cycle #</th>
+                                    <th>Bugs Found</th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input class="form-control" ng-model="buglist.cycle"></td>
+                                    <td><input class="form-control" type="number" min="0" max="200" ng-model="buglist.bugs"></td>
+                                    <td><input class="form-control" ng-model="buglist.status"></td>
+                                    <td><button class="btn btn-success" ng-click="addBug()">Add Bugs</button></td>
+
+                                </tr>
+                                <!--tr ng-repeat="bug in bugListData|filter:search"-->
+                                    <tr dir-paginate="bug in bugListData|filter:search|itemsPerPage:9">
+                                    <td>{{bug.cycle}}</td>
+                                    <td>{{bug.bugs}}</td>
+                                    <td>{{bug.status}}</td>
+                                    <td><button class="btn btn-danger" ng-click="remove(bug._id)">Remove</button></td>
+                                </tr> 
+                            </tbody>
+                            
+                        </table> 
+                            <dir-pagination-controls
+                                max-size="9"
+                                direction-links="true"
+                                boundary-links="true">
+                            </dir-pagination-controls>                   
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
