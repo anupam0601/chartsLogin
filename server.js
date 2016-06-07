@@ -195,4 +195,4 @@ app.delete('/bugListRoute/:id', function(req,res){
 });
 
 
-app.listen(3000,'0.0.0.0');
+app.listen(3002,'0.0.0.0');

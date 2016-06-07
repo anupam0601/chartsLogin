@@ -209,6 +209,13 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
   $http.get('/testlist').success(function(response){
     console.log("I got the data i requested for test results", response);
     $scope.testlist = response; //It will put the data into html file , response is what we got from the api that is being there in the server.js
+    
+    //Function for sorting
+    $scope.sort = function(keyname){
+      $scope.sortKey = keyname; // Set the sortkey to the param passed
+      $scope.reverse = !$scope.reverse; // if true make it false and vice versa
+    }
+
   });
 
 }]);

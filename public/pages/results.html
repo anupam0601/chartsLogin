@@ -29,17 +29,25 @@
                         <table class="table table-responsive table-hover">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Test Case Id</th>
-                                    <th>Title</th>
-                                    <th>Status</th>
+                                    <th ng-click="sort('date')">Date
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='date'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th >Test Case Id
+                                        
+                                    </th>
+                                    <th ng-click="sort('title')">Title
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='title'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
+                                    <th ng-click="sort('status')">Status
+                                        <span class="glyphicon sort-icon" ng-show="sortKey=='status'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Adding Pagination and sorting data in descending order for date field -->
+                                <!-- Adding Pagination and sorting data -->
                                 <!-- Added ng-class for changing bg color for test cases failing -->
                                 <!--tr ng-repeat="test in testlist | orderBy : '-date'"-->
-                                <tr dir-paginate="test in testlist| orderBy : '-date'| filter:search| itemsPerPage:15" ng-class="{'red' : test.status == 'Fail'}">
+                                <tr dir-paginate="test in testlist| orderBy:sortKey:reverse| filter:search| itemsPerPage:15" ng-class="{'red' : test.status == 'Fail'}">
                                     <td>{{test.date}}</td>
                                     <td>{{test.id}}</td>
                                     <td>{{test.title}}</td>
