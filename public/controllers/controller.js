@@ -1,6 +1,6 @@
 
-// Including ngRoute and tc.chartjs modules
-var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize']);
+// Including angular and other modules
+var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize','growlNotifications']);
 
 
 
@@ -224,48 +224,58 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 // Controller for adding Bugs per cycle
 myApp.controller('bugList',['$scope', '$http', '$interpolate',function($scope,$http,$interpolate){
 
-// Putting the get bufglist data under refresh function
-var refresh = function() {
-	// with the below route angular will contact server.js to get and post bug's data in mongodb 
-	$http.get('/bugListRoute').success(function(response){
-	  console.log("I got the data i requested for Bugs", response);
-	  $scope.bugListData= response; //It will put the data into html file , response is what we got from the api that is being there in the server.js
-	  $scope.buglist= ""; // It will empty the input box after adding the data	  
-	});
+    // Putting the get buglist data under refresh function
+    var refresh = function() {
 
-};
+    	// with the below route angular will contact server.js to get and post bug's data in mongodb 
+    	$http.get('/bugListRoute').success(function(response){
 
-refresh();
+    	  console.log("I got the data i requested for Bugs", response);
 
-// Function to add bug list 
-$scope.addBug = function(){
-	console.log("Bug list data ======>",$scope.buglist)
-	// Getting the response for our post request. Here response is the argument from the server
-	$http.post('/bugListRoute', $scope.buglist).success(function(response){
-		console.log("added Bug =======>",response);
-    
-    if (response){
-      console.log("sending html")
-      $scope.alert = "Bug added Successfully";
-      $scope.html = $interpolate('<div class="alert alert-success alert-dismissible fade in" role="alert"> {{ alert }}</div>')($scope);
-     
-    }
+    	  $scope.bugListData= response; //It will put the data into html file , response is what we got from the api that is there in the server.js
+    	  $scope.buglist= ""; // It will empty the input box after adding the data	  
+    	});
 
-		refresh();
+    };
 
-    
-	});
-};
+    refresh();
 
 
-//Function to delete a Bug entry from the UI
-$scope.remove = function(id) {
-	console.log(id); //id of the entry we want to delete
-  $http.delete('/bugListRoute/' + id).success(function(response){
-    refresh(); //To immediately refresh the page after deleting the entry
-  });
+    // Function to add bug list 
+    $scope.addBug = function(){
+    	console.log("Bug list data ======>",$scope.buglist)
+    	// Getting the response for our post request. Here response is the argument from the server
+    	$http.post('/bugListRoute', $scope.buglist).success(function(response){
+    		console.log("added Bug =======>",response);
+        
+        // sending an alert once we get post req --> response after adding bug
+        if (response){
+          console.log("sending html",response);
+          $scope.alert = "Bug added Successfully";
+          
+          // using interpolate to return html as text to the bugList html page
+          // Sending bootstrap success alert 
+          $scope.html = $interpolate('<div class = "alert alert-success" role="alert">{{alert}}</div>')($scope);
 
-};
+          refresh();
+          
+        }
+
+    		
+
+        
+    	});
+    };
+
+
+    // Function to delete a Bug entry from the UI
+    $scope.remove = function(id) {
+    	console.log(id); //id of the entry we want to delete
+      $http.delete('/bugListRoute/' + id).success(function(response){
+        refresh(); //To immediately refresh the page after deleting the entry
+      });
+
+    };
 
 }]);
 
