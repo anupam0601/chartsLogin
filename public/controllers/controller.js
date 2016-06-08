@@ -1,6 +1,6 @@
 
 // Including ngRoute and tc.chartjs modules
-var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination']);
+var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize']);
 
 
 
@@ -222,7 +222,7 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 
 
 // Controller for adding Bugs per cycle
-myApp.controller('bugList',['$scope', '$http', function($scope,$http){
+myApp.controller('bugList',['$scope', '$http', '$interpolate',function($scope,$http,$interpolate){
 
 // Putting the get bufglist data under refresh function
 var refresh = function() {
@@ -239,11 +239,21 @@ refresh();
 
 // Function to add bug list 
 $scope.addBug = function(){
-	console.log($scope.buglist)
+	console.log("Bug list data ======>",$scope.buglist)
 	// Getting the response for our post request. Here response is the argument from the server
 	$http.post('/bugListRoute', $scope.buglist).success(function(response){
-		console.log(response);
+		console.log("added Bug =======>",response);
+    
+    if (response){
+      console.log("sending html")
+      $scope.alert = "Bug added Successfully";
+      $scope.html = $interpolate('<div class="alert alert-success alert-dismissible fade in" role="alert"> {{ alert }}</div>')($scope);
+     
+    }
+
 		refresh();
+
+    
 	});
 };
 

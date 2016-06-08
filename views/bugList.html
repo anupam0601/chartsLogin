@@ -26,7 +26,7 @@
                                 <input type="text" ng-model="search" class="form-control" placeholder="search">
                             </div>
                         </form>
-
+                        <div class="alert alert-success" role="alert"> {{alert}} </div>
                         <table class="table table-responsive table-striped table-hover">
                             <thead>
                                 <tr>
@@ -43,6 +43,7 @@
                                     <td><input class="form-control" type="number" min="0" max="200" ng-model="buglist.bugs"></td>
                                     <td><input class="form-control" ng-model="buglist.status"></td>
                                     <td><button class="btn btn-success" ng-click="addBug()">Add Bugs</button></td>
+                                    
 
                                 </tr>
                                 <!--tr ng-repeat="bug in bugListData|filter:search"-->
@@ -54,6 +55,8 @@
                                 </tr> 
                             </tbody>
                             
+                            <!-- Alerts for added Bug -->
+
                         </table> 
                             <dir-pagination-controls
                                 max-size="9"
