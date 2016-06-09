@@ -1,6 +1,6 @@
 
 // Including angular and other modules
-var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize','growlNotifications']);
+var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize']);
 
 
 
@@ -222,8 +222,11 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 
 
 // Controller for adding Bugs per cycle
-myApp.controller('bugList',['$scope', '$http', '$interpolate',function($scope,$http,$interpolate){
-
+myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',function($scope,$http,$interpolate,$timeout){
+  
+  // Initializing alert as empty
+  $scope.alert = ""; 
+  
     // Putting the get buglist data under refresh function
     var refresh = function() {
 
@@ -233,7 +236,8 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate',function($scope,$h
     	  console.log("I got the data i requested for Bugs", response);
 
     	  $scope.bugListData= response; //It will put the data into html file , response is what we got from the api that is there in the server.js
-    	  $scope.buglist= ""; // It will empty the input box after adding the data	  
+    	  $scope.buglist= ""; // It will empty the input box after adding the data	
+         
     	});
 
     };
@@ -252,18 +256,25 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate',function($scope,$h
         if (response){
           console.log("sending html",response);
           $scope.alert = "Bug added Successfully";
+          console.log("before 7 secs ======>",$scope.alert);
           
           // using interpolate to return html as text to the bugList html page
           // Sending bootstrap success alert 
-          $scope.html = $interpolate('<div class = "alert alert-success" role="alert">{{alert}}</div>')($scope);
-
+          //$scope.html = $interpolate('<div class = "alert alert-success" role="alert">{{alert}}</div>')($scope);
+          
           refresh();
+
+          
+
+          //Adding a 2 second delay and emptying the alert
+         $timeout(function(){
+           $scope.alert = ""; 
+           console.log("after 3 secs ======>",$scope.alert);
+           
+          },2000);
           
         }
-
-    		
-
-        
+    		       
     	});
     };
 

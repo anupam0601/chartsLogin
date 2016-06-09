@@ -3,16 +3,12 @@
 
 <div class="container">
 
-<!-- Directive to specify where the notifications need be rendered in the DOM -->
-<growl-notifications></growl-notifications>
+     <div ng-if = "alert != '' ">
+                
+        <div class = "alert alert-success" role="alert">{{ alert }}</div>
     
-    <!-- Display a notification when the page loads -->
-    <growl-notification ttl="10000">
+    </div>
 
-    <!-- Binding html from controller (getting the alert from controller) -->
-    <div ng-bind-html="html"></div>
-
-    </growl-notification>
 </div>
 
 
@@ -27,7 +23,7 @@
     <div class="row" >
         <div class="col-md-12">
 
-        <!--Putting test results in the panel-->
+        <!-- Putting test results in the panel -->
         
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -58,6 +54,7 @@
                                     
                                 </tr>
                             </thead>
+
                             <tbody>
                                 <tr>
                                     <td><input class="form-control" ng-model="buglist.cycle"></td>
@@ -76,6 +73,8 @@
                             </tbody>
                             
                         </table> 
+
+                            <!-- dir-pagination directive -->
                             <dir-pagination-controls
                                 max-size="9"
                                 direction-links="true"
