@@ -47,57 +47,8 @@ myApp.controller('mainController', ['$scope',function($scope){
 
 }]);
 
-// Charts controller
-myApp.controller('chartController', ['$scope', '$http', function($scope, $http){
-      
-      // Data for line chart
-      //Through REST api getting the data for specific fields from server.js
- 	//Get the callback and then put the data in line chart fields
-
-	$http.get('/lineChartRoute').success(function(response){
-	  console.log("I got the data for line chart i requested:", response);
-	  
-    $scope.labels = response[1]; //For line chart labels
-	  $scope.data = response[0]; // for line charts data
-	  console.log("--->",$scope.labels);
-	  console.log("***:", $scope.data);
-	  	
-	  	// Declaring the below inside call back i.e $http.get so that it gets the data when the call back event is initialized
-	  	//If we declare the below in seperate function outside our current call back will return the control and the function defined outside
-	  	//will get no data
-		$scope.lineChartData = {
-		    //labels: $scope.labels.labels, // Getting the labels object from $scope.labels
-		    
-        labels: $scope.labels,
-        datasets: [
-		      {
-		        fillColor: 'rgba(220,220,220,0.2)',
-		        strokeColor: 'rgba(220,220,220,1)',
-		        pointColor: 'rgba(220,220,220,1)',
-		        pointStrokeColor: '#fff',
-		        pointHighlightFill: '#fff',
-		        pointHighlightStroke: 'rgba(220,220,220,1)',
-		        data: $scope.data //Getting data object from $scope.data
-		      }
-		     
-		    ]
-		  };
-
-	  });
-
-
-	  // Data for Doughnut and Pie chart
-  	//Getting the data from mongodb with the below REST api
-  	$http.get('/pieChartRoute').success(function(response){
-  	console.log("I got the data for pie chart i requested:", response);
-  	$scope.pieChartData = response;
-  
-  	});
-
-   
-
-  // Chart.js Options
-  $scope.options =  {
+// Global variable for chart options using value()
+myApp.value('myChartOps',{
 
     // Sets the chart to be responsive
     responsive: true,
@@ -197,13 +148,68 @@ myApp.controller('chartController', ['$scope', '$http', function($scope, $http){
     segmentStrokeWidth : 2,
 
     
-  };
+  });
+
+
+// Charts controller
+myApp.controller('chartController', ['$scope', '$http','myChartOps', function($scope, $http,myChartOps){
+      
+      // Data for line chart
+      //Through REST api getting the data for specific fields from server.js
+ 	//Get the callback and then put the data in line chart fields
+
+	$http.get('/lineChartRoute').success(function(response){
+	  console.log("I got the data for line chart i requested:", response);
+	  
+    $scope.labels = response[1]; //For line chart labels
+	  $scope.data = response[0]; // for line charts data
+	  console.log("--->",$scope.labels);
+	  console.log("***:", $scope.data);
+	  	
+	  	// Declaring the below inside call back i.e $http.get so that it gets the data when the call back event is initialized
+	  	//If we declare the below in seperate function outside our current call back will return the control and the function defined outside
+	  	//will get no data
+		$scope.lineChartData = {
+		    //labels: $scope.labels.labels, // Getting the labels object from $scope.labels
+		    
+        labels: $scope.labels,
+        datasets: [
+		      {
+		        fillColor: 'rgba(220,220,220,0.2)',
+		        strokeColor: 'rgba(220,220,220,1)',
+		        pointColor: 'rgba(220,220,220,1)',
+		        pointStrokeColor: '#fff',
+		        pointHighlightFill: '#fff',
+		        pointHighlightStroke: 'rgba(220,220,220,1)',
+		        data: $scope.data //Getting data object from $scope.data
+		      }
+		     
+		    ]
+		  };
+
+	  });
+
+
+	  // Data for Doughnut and Pie chart
+  	//Getting the data from mongodb with the below REST api
+  	$http.get('/pieChartRoute').success(function(response){
+  	console.log("I got the data for pie chart i requested:", response);
+  	$scope.pieChartData = response;
+  
+  	});
+
+   
+
+  // Chart.js Options
+  $scope.options =  myChartOps
 
 }]);
 
 
 // Controller for getting test results mongo data
 myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
+
+  //console.log(myChartOps);
 
 // with the below route angular will contact server.js to get the data from mongodb 
   $http.get('/testlist').success(function(response){
@@ -226,6 +232,7 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',functio
   
   // Initializing alert as empty
   $scope.alert = ""; 
+  $scope.delAlert = "";
   
     // Putting the get buglist data under refresh function
     var refresh = function() {
@@ -253,26 +260,24 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',functio
     		console.log("added Bug =======>",response);
         
         // sending an alert once we get post req --> response after adding bug
-        if (response){
-          console.log("sending html",response);
-          $scope.alert = "Bug added Successfully";
-          console.log("before 7 secs ======>",$scope.alert);
-          
-          // using interpolate to return html as text to the bugList html page
-          // Sending bootstrap success alert 
-          //$scope.html = $interpolate('<div class = "alert alert-success" role="alert">{{alert}}</div>')($scope);
-          
-          refresh();
+          if (response){
+            console.log("sending html",response);
+            $scope.alert = "Bug added Successfully";
+            console.log("before 2 secs ======>",$scope.alert);
+            
+            // using interpolate to return html as text to the bugList html page
+            // Sending bootstrap success alert 
+            //$scope.html = $interpolate('<div class = "alert alert-success" role="alert">{{alert}}</div>')($scope);
+            
+            refresh();
 
-          
-
-          //Adding a 2 second delay and emptying the alert
-         $timeout(function(){
-           $scope.alert = ""; 
-           console.log("after 3 secs ======>",$scope.alert);
-           
-          },2000);
-          
+            //Adding a 2 second delay and emptying the alert
+             $timeout(function(){
+               $scope.alert = ""; 
+               console.log("after 2 secs ======>",$scope.alert);
+               
+              },2000);
+            
         }
     		       
     	});
@@ -283,7 +288,23 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',functio
     $scope.remove = function(id) {
     	console.log(id); //id of the entry we want to delete
       $http.delete('/bugListRoute/' + id).success(function(response){
+        if (response){
+            console.log("sending html",response);
+            $scope.delAlert = "Bug deleted Successfully";
+            console.log("before 2 secs ======>",$scope.delAlert);
+
+
         refresh(); //To immediately refresh the page after deleting the entry
+        
+        //Adding a 2 second delay and emptying the alert
+             $timeout(function(){
+               $scope.delAlert = ""; 
+               console.log("after 2 secs ======>",$scope.delAlert);
+               
+              },2000);
+
+           }
+
       });
 
     };
