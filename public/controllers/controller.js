@@ -1,6 +1,6 @@
 
 // Including angular and other modules
-var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize']);
+var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize','ngAnimate']);
 
 
 
@@ -44,6 +44,9 @@ myApp.config(['$routeProvider',function($routeProvider) {
 myApp.controller('mainController', ['$scope',function($scope){
   
   $scope.message = 'Landing Page';
+
+  //Animation class name
+  $scope.pageClass = 'page-home';
 
 }]);
 
@@ -154,6 +157,10 @@ myApp.value('myChartOps',{
 // Charts controller
 myApp.controller('chartController', ['$scope', '$http','myChartOps', function($scope, $http,myChartOps){
       
+      //Animation class name
+  $scope.pageClass = 'page-charts';
+
+
       // Data for line chart
       //Through REST api getting the data for specific fields from server.js
  	//Get the callback and then put the data in line chart fields
@@ -209,6 +216,9 @@ myApp.controller('chartController', ['$scope', '$http','myChartOps', function($s
 // Controller for getting test results mongo data
 myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 
+ //Animation class name
+  $scope.pageClass = 'page-results'; 
+
   //console.log(myChartOps);
 
 // with the below route angular will contact server.js to get the data from mongodb 
@@ -230,9 +240,13 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 // Controller for adding Bugs per cycle
 myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',function($scope,$http,$interpolate,$timeout){
   
+  //Animation class name
+  $scope.pageClass = 'page-bugList';
+
+
   // Initializing alert as empty
-  $scope.alert = ""; 
-  $scope.delAlert = "";
+  $scope.alert = "" ; 
+  $scope.delAlert = "" ;
   
     // Putting the get buglist data under refresh function
     var refresh = function() {
