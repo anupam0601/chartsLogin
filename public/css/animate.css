@@ -2,7 +2,7 @@
 ============================================================================= */
 
 .page.ng-leave 	{ z-index:9999; }
-.page.ng-enter 	{ z-index:8888; }
+.page.ng-enter 	{ y-index:8888; }
 
 /* page specific animations ------------------------ */
 
