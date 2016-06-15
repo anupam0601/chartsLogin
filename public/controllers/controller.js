@@ -19,6 +19,12 @@ myApp.config(['$routeProvider',function($routeProvider) {
       controller : 'mainController'
     })
 
+    // route for about page
+    .when('/about',{
+      templateUrl : 'pages/about.html',
+      controller : 'aboutController'
+    })
+
     // route for Charts page
     .when('/charts', {
       templateUrl : 'pages/charts.html',
@@ -36,17 +42,46 @@ myApp.config(['$routeProvider',function($routeProvider) {
       templateUrl : 'pages/bugList.html',
       controller : 'bugList'
     })
+
+    // route for Bugs per cycle page
+    .when('/dash', {
+      templateUrl : 'pages/amcharts.html',
+      controller : 'dashController'
+    })
 }]);
 
 // Create the controllers and inject Angular's $scope
 
 // Home page controller
+
 myApp.controller('mainController', ['$scope',function($scope){
   
   $scope.message = 'Landing Page';
 
   //Animation class name
   $scope.pageClass = 'page-home';
+
+}]);
+
+
+// About page controller
+
+myApp.controller('aboutController', ['$scope',function($scope){
+  
+  $scope.message = 'Landing Page';
+
+  //Animation class name
+  $scope.pageClass = 'page-about';
+
+}]);
+
+
+// About page controller
+
+myApp.controller('dashController', ['$scope',function($scope){
+ 
+ $scope.amChartOptions = "anupam"
+
 
 }]);
 
