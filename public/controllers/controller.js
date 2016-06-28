@@ -76,12 +76,11 @@ myApp.controller('aboutController', ['$scope',function($scope){
 }]);
 
 
-// About page controller
+// Dash page controller
 
 myApp.controller('dashController', ['$scope',function($scope){
  
- $scope.amChartOptions = "anupam"
-
+ $scope.amChartOptions = ""
 
 }]);
 
