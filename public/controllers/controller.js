@@ -2,6 +2,31 @@
 // Including angular and other modules
 var myApp = angular.module('myModule',['tc.chartjs','ngRoute','angularUtils.directives.dirPagination','ngSanitize','ngAnimate']);
 
+// Socket.io factory
+myApp.factory('socketio', ['$rootScope', function ($rootScope) {
+        
+        var socket = io.connect();
+        return {
+            on: function (eventName, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                });
+            },
+            emit: function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                });
+            }
+        };
+    }]);
 
 
 // Configuring our routes
@@ -272,7 +297,7 @@ myApp.controller('resultController', ['$scope', '$http', function($scope,$http){
 
 
 // Controller for adding Bugs per cycle
-myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',function($scope,$http,$interpolate,$timeout){
+myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout','socketio',function($scope,$http,$interpolate,$timeout,socketio){
   
   //Animation class name
   $scope.pageClass = 'page-bugList';
@@ -290,8 +315,14 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',functio
 
     	  console.log("I got the data i requested for Bugs", response);
 
-    	  $scope.bugListData= response; //It will put the data into html file , response is what we got from the api that is there in the server.js
-    	  $scope.buglist= ""; // It will empty the input box after adding the data	
+      	  $scope.bugListData = response; //It will put the data into html file , response is what we got from the api that is there in the server.js
+      	  
+          //Socket.io function : Only for adding the bug, bugSock is the route between angular and express
+          socketio.on('bugSock', function (msg) {
+              $scope.bugListData.push(msg);
+          });
+
+        $scope.buglist= ""; // It will empty the input box after adding the data	
          
     	});
 
@@ -336,15 +367,19 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout',functio
     $scope.remove = function(id) {
     	console.log(id); //id of the entry we want to delete
       $http.delete('/bugListRoute/' + id).success(function(response){
+
         if (response){
             console.log("sending html",response);
+
             $scope.delAlert = "Bug deleted Successfully";
+
             console.log("before 2 secs ======>",$scope.delAlert);
 
 
         refresh(); //To immediately refresh the page after deleting the entry
         
         //Adding a 2 second delay and emptying the alert
+        
              $timeout(function(){
                $scope.delAlert = ""; 
                console.log("after 2 secs ======>",$scope.delAlert);

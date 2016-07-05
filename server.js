@@ -52,6 +52,10 @@ app.use(cookieParser());
 // Set Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Making the app to work as http for socket.io
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 // Express Session
 app.use(session({
     secret: 'secret',
@@ -180,7 +184,12 @@ app.post('/bugListRoute', function(req,res){
 	console.log(req.body);
 	// Inserting the data into MongoDB coll-----> buglist and  sending back the data to angular
 	buglist.insert(req.body, function(err,doc){
+
+		// Emitting it for web socket : bugSock is the route for socket
+		io.emit('bugSock', req.body);
 		res.json(doc);
+		
+		//return res.sendStatus(200);
 	});
 });
 
@@ -194,5 +203,8 @@ app.delete('/bugListRoute/:id', function(req,res){
 	});
 });
 
+// Making it to listen in 3000 for socket.io otherwise it doesn't work
+http.listen(3000, function () {
+    'use strict';
+});
 
-app.listen(3002,'0.0.0.0');
