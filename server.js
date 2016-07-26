@@ -123,7 +123,15 @@ app.get('/testlist', function(req,res){
 	});
 });
 
+// REST API to aggregate the test results status as per date 
+app.get('/testDataAgg', function(req,res){
+	mycoll.aggregate([{$match: {status: {$in: ["Pass"]}}}, {$unwind: "$status"}, {$match: {status: {$in: ["Pass"]}}}, {$group: { _id:"$date", matches:{$sum:1} }}, { $group: { _id: null,  date : { $push : "$_id" },  status : { $push : "$matches" } } } ],function(err,docs){
+		console.log("new annnnn ======>",docs);
+		res.json(docs);
+	});
 
+
+});
 
 /*api for fetching linechart data from mongo and returning linechart data to angular
 app.get('/lineChartRoute', function(req,res){

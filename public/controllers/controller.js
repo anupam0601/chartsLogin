@@ -103,9 +103,11 @@ myApp.controller('aboutController', ['$scope',function($scope){
 
 // Dash page controller
 
-myApp.controller('dashController', ['$scope',function($scope){
+myApp.controller('dashController', ['$scope', '$http', function($scope,$http){
  
- $scope.amChartOptions = ""
+   $http.get('/testDataAgg').success(function(response){
+      console.log("I got the data i requested for test data aggregate", response);
+  });
 
 }]);
 

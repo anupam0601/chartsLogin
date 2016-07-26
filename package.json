@@ -17,6 +17,7 @@
     "express-validator": "*",
     "http": "0.0.0",
     "mongodb": "*",
+    "mongojs": "^2.4.0",
     "mongoose": "*",
     "passport": "*",
     "passport-http": "*",
