@@ -68,6 +68,18 @@
 	animation:slideInUp 0.8s both ease-in;   
 }
 
+/* analyticsDash page ------------------------ */
+.page-analyticsDash.ng-leave        {
+    -webkit-animation:slideOutLeft 0.7s both ease-in;
+	-moz-animation:slideOutLeft 0.7s both ease-in;
+	animation:slideOutLeft 0.7s both ease-in;   
+}
+.page-analyticsDash.ng-enter 		{  
+    -webkit-animation:slideInUp 0.8s both ease-in;
+	-moz-animation:slideInUp 0.8s both ease-in;
+	animation:slideInUp 0.8s both ease-in;   
+}
+
 
 
 /* rotate and fall */

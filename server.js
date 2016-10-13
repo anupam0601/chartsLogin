@@ -126,8 +126,15 @@ app.get('/testlist', function(req,res){
 // REST API to aggregate the test results status as per date 
 app.get('/testDataAgg', function(req,res){
 	mycoll.aggregate([{$match: {status: {$in: ["Pass"]}}}, {$unwind: "$status"}, {$match: {status: {$in: ["Pass"]}}}, {$group: { _id:"$date", matches:{$sum:1} }}, { $group: { _id: null,  date : { $push : "$_id" },  status : { $push : "$matches" } } } ],function(err,docs){
-		console.log("new annnnn ======>",docs);
-		res.json(docs);
+		console.log("array with date ======>",docs[0].date);
+		console.log("array with satus ======>",docs[0].status);
+
+		var statusArr = [];
+		statusArr[0] = docs[0].date;
+		statusArr[1] = docs[0].status;
+
+		console.log("complete new array for status=====>",statusArr);
+		res.json(statusArr);
 	});
 
 
@@ -195,6 +202,7 @@ app.post('/bugListRoute', function(req,res){
 
 		// Emitting it for web socket : bugSock is the route for socket
 		io.emit('bugSock', req.body);
+		console.log("json doc ++++++++",doc);
 		res.json(doc);
 		
 		//return res.sendStatus(200);
@@ -207,6 +215,8 @@ app.delete('/bugListRoute/:id', function(req,res){
 	console.log(id); //Printing the id of the bug that we want to remove <--- getting the call from delete REST call from angular on same route
 	// Here id is the variable in line 90
 	buglist.remove({_id: mongojs.ObjectId(id)}, function(err,doc){
+		console.log(""+ doc + " row deleted");
+		io.emit("bugSock",[]);
 		res.json(doc); //Sending back the doc (entry) that we are deleting to the controller
 	});
 });

@@ -70,7 +70,7 @@ myApp.config(['$routeProvider',function($routeProvider) {
 
     // route for Bugs per cycle page
     .when('/dash', {
-      templateUrl : 'pages/amcharts.html',
+      templateUrl : 'pages/analyticsDash.html',
       controller : 'dashController'
     })
 }]);
@@ -100,16 +100,6 @@ myApp.controller('aboutController', ['$scope',function($scope){
 
 }]);
 
-
-// Dash page controller
-
-myApp.controller('dashController', ['$scope', '$http', function($scope,$http){
- 
-   $http.get('/testDataAgg').success(function(response){
-      console.log("I got the data i requested for test data aggregate", response);
-  });
-
-}]);
 
 // Global variable for chart options using value()
 myApp.value('myChartOps',{
@@ -214,6 +204,43 @@ myApp.value('myChartOps',{
     
   });
 
+// Dash page controller
+
+myApp.controller('dashController', ['$scope', '$http', function($scope,$http,myChartOps){
+ 
+ //Animation class name
+  $scope.pageClass = 'page-analyticsDash'; 
+
+   $http.get('/testDataAgg').success(function(response){
+      console.log("I got the data i requested for test data aggregate", response);
+
+      $scope.date = response[0]; //For line chart labels
+      $scope.status = response[1]; // for line charts data
+
+
+      $scope.lineChartData = {
+        //labels: $scope.labels.labels, // Getting the labels object from $scope.labels
+        
+        labels: $scope.date,
+        datasets: [
+          {
+            fillColor: 'rgba(220,220,220,0.2)',
+            strokeColor: 'rgba(220,220,220,1)',
+            pointColor: 'rgba(220,220,220,1)',
+            pointStrokeColor: '#fff',
+            pointHighlightFill: '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data: $scope.status //Getting data object from $scope.data
+          }
+         
+        ]
+      };
+
+      // Chart.js Options
+      $scope.options =  myChartOps;
+  });
+  
+}]);
 
 // Charts controller
 myApp.controller('chartController', ['$scope', '$http','myChartOps', function($scope, $http,myChartOps){
@@ -321,6 +348,7 @@ myApp.controller('bugList',['$scope', '$http', '$interpolate','$timeout','socket
       	  
           //Socket.io function : Only for adding the bug, bugSock is the route between angular and express
           socketio.on('bugSock', function (msg) {
+              console.log("Data from server on socket ===>", msg)
               $scope.bugListData.push(msg);
           });
 
